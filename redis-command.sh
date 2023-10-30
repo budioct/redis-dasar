@@ -1,0 +1,97 @@
+# menggunakan redis di docker
+
+# pull image dari docker hub
+docker pull redis:7.2
+
+# membuat container dengan image yang kita gunakan
+# production
+docker container create --name redis-stack-server -p 6379:6379 redis:7.2 # hanya dibuatkan
+docker run -d --name redis-stack-server -p 6379:6379 redis:7.2 # dibuatkan sekaligus di jalanakan
+
+# local
+docker container create --name redis-stack -p 6379:6379 -p 8001:8001 redis:7.2 # hanya dibuatkan
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis:7.2 # dibuatkan sekaligus di jalanakan
+
+# menjalankan container
+docker container start redis-stack
+
+# masuk ke dalam redis server
+docker container exec -it redis-stack /bin/bash
+root@c73c3d897209:/data#
+
+# cek apakah redis sudah jalan
+redis-server
+root@c73c3d897209:/data# redis-server
+# feedback cmd redis-server
+ Running in standalone mode
+ port: 6379 (port default redis)
+
+# jalankan redis dengan custom configuration
+root@c73c3d897209:/data# redis-server redis.conf
+
+# masuk ke dalam redis client langsung dari luar container (CLI)
+docker exec -it redis-stack redis-cli
+127.0.0.1:6379>
+
+# masuk ke dalam redis client di dalam container (CLI)
+docker container exec -it redis-stack /bin/bash
+root@71ae6829b569:/hello#  redis-cli -h localhost -p 6379
+localhost:6379>
+
+# cek apakah memang sudah di dalam redis
+localhost:6379> ping
+PONG
+
+
+
+# docker Dockerfile config
+# instruksi FROM (dijalankan untuk pull image yang ada di docker hub di proses build image)
+FROM redis:7.2
+
+# intruksi WORKDIR (untuk menentukan direktory/folder untuk menjalankan instruksi RUN, CMD, ENTRYPOINT, COPY, dan ADD)
+WORKDIR /hello
+
+# intruksi COPY (dijalankan untuk menambahkan file dari source ke dalam folder destination di Docker Image)
+# menambahkan semua file .txt ke folder hello
+COPY config/*.conf /hello
+
+EXPOSE 6379
+
+# instruksi COMMAND/CMD (dijalankan saat container running)
+#CMD cat "hello/redis.conf"
+
+# cmd instruksi
+docker build -t redis-alphine . # akan membaca Docker file dalama directory
+
+
+
+# docker compose config .yml
+version: "3.3"
+services:
+  redis-stack:
+    image: redis:7.2
+    container_name: redis-stack
+    restart: always
+    volumes:
+      - redis_volume_data:/data
+    ports:
+      - 6379:6379
+  redis-stack-insight:
+    image: redislabs/redisinsight:latest
+    container_name: redis-stack-insight
+    restart: always
+    ports:
+      - 8001:8001
+    volumes:
+      - redis_insight_volume_data:/db
+volumes:
+  redis_volume_data:
+  redis_insight_volume_data:
+
+# cmd instruksi
+docker-compose -f redis-docker-compose.yml up
+
+
+
+
+
