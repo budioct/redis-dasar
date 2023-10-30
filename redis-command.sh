@@ -92,6 +92,13 @@ volumes:
 docker-compose -f redis-docker-compose.yml up
 
 
+########################################################################
+# Databases
+# Namun sedikit berbeda, jika di relational database kita bisa membuat database dengan menggunakan nama database, di redis kita hanya bisa menggunakan angka sebagai database
+# Secara default database di redis adalah 0 (nol)
+#Kita bisa menggunakan database sejumlah maksimal sesuai dengan konfigurasi yang kita gunakan di file konfigurasi
+# redis.conf
+# search keyword= databases.. default value databases 16, jadi dimulai dari 0 samapi 16 -1
 
-
-
+#untuk berpindah database dengan cara
+#select databases --> select 0 ~ 16 -1  or max databases
