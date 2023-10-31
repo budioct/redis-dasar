@@ -1,7 +1,7 @@
-# menggunakan redis di docker
+# setup menggunakan redis di docker
 
 # pull image dari docker hub
-docker pull redis:7.2
+docker pull redis:7.2 / versi tag latest
 
 # membuat container dengan image yang kita gunakan
 # production
@@ -15,25 +15,25 @@ docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis:7.2 # dibuatkan
 # menjalankan container
 docker container start redis-stack
 
-# masuk ke dalam redis server
+# masuk ke dalam container untuk, bisa menjalankan redis-server dan redis-cli
 docker container exec -it redis-stack /bin/bash
 root@c73c3d897209:/data#
 
-# cek apakah redis sudah jalan
+# menjalankan redis server
 redis-server
 root@c73c3d897209:/data# redis-server
 # feedback cmd redis-server
  Running in standalone mode
  port: 6379 (port default redis)
 
-# jalankan redis dengan custom configuration
+# jalankan redis server dengan custom configuration
 root@c73c3d897209:/data# redis-server redis.conf
 
-# masuk ke dalam redis client langsung dari luar container (CLI)
+# menjalankan redis CLI langsung dari luar container
 docker exec -it redis-stack redis-cli
 127.0.0.1:6379>
 
-# masuk ke dalam redis client di dalam container (CLI)
+# menjalankan redis CLI di dalam container
 docker container exec -it redis-stack /bin/bash
 root@71ae6829b569:/hello#  redis-cli -h localhost -p 6379
 localhost:6379>
