@@ -16,6 +16,7 @@ OK
 localhost:6379[3]>
 
 
+
 # Strings
 # Redis sebenarnya mendukung struktur data yang banyak, seperti String, List, Set, dan lain-lain
 # Namun yang paling sering digunakan adalah struktur data String
@@ -79,3 +80,42 @@ localhost:6379> mget budhi joko achmad idris jamal
 4) "400"
 5) "500"
 localhost:6379>
+
+
+
+# Expiration
+# Secara default saat kita menyimpan data ke redis, redis akan menyimpannya secara permanen sampai kita menghapusnya
+# dalam kasus kita ingin menghapus data di redis secara otomatis dalam waktu tertentu
+# Misal kita menyimpan data cache di redis selama 10 menit, setelah 10 menit kita akan query ulang ke database untuk mendapatkan data terbaru
+# redis memiliki fitur expiration secara otomatis pada data yang kita simpan di redis
+
+# Operasi Expiration Data String
+# Operasi                       Keterangan
+# expire key seconds            Set a key's time to live in seconds
+# setex key seconds value       Set the value and expiration of a key
+# ttl key                       Get the time to live for a key.. (ttl ==> time to live (realtime))
+
+localhost:6379> keys *
+1) "achmad"
+2) "budhi"
+3) "idris"
+4) "jamal"
+5) "joko"
+localhost:6379> expire budhi 10
+(integer) 1
+localhost:6379> ttl budhi
+(integer) 5
+localhost:6379> ttl budhi
+(integer) 3
+localhost:6379> get budhi
+(nil)
+localhost:6379> setex budhi 12 "budhi oct 868"
+OK
+localhost:6379> ttl budhi
+(integer) 7
+localhost:6379> get budhi
+"budhi oct 868"
+localhost:6379> get budhi
+(nil)
+localhost:6379>
+
