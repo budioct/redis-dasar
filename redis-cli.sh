@@ -300,5 +300,53 @@ localhost:6379>
 
 
 
+# Monitor
+# mendebug aplikasi saat berkomunikasi dengan redis
+# Redis memiliki fitur monitor, yaitu fitur untuk memonitor semua request yang masuk ke redis server
+# Dengan fitur ini kita bisa mudah mendebug jika ternyata ada perintah yang salah yang dikirim oleh aplikasi kita ke redis server
+
+#Operasi     Keterangan
+#monitor     Listen for all requests received by the server in real time
+
+# redis CLI
+localhost:6379> keys *
+1) "oct"
+2) "android"
+3) "lfc"
+4) "palestine"
+5) "ios"
+6) "budhi"
+7) "linux"
+localhost:6379> mget oct android lfc palestine ios budhi linux
+1) "oct"
+2) "adroid"
+3) "liverpool football club"
+4) "palestine"
+5) "ios"
+6) "budhi"
+7) "linux"
+localhost:6379> set ayam "ayam"
+OK
+localhost:6379> get ayam
+"ayam"
+localhost:6379>
+
+# redis on docker
+> docker container exec -it redis-stack /bin/bash
+root@71ae6829b569:/hello# redis-cli -h localhost -p 6379
+
+# redis Monitor
+localhost:6379> monitor
+OK
+1698741210.509241 [0 127.0.0.1:60064] "keys" "*"
+1698741240.649120 [0 127.0.0.1:60064] "mget" "oct" "android" "lfc" "palestine" "ios" "budhi" "linux"
+1698741263.949037 [0 127.0.0.1:60064] "set" "ayam" "ayam"
+1698741266.637323 [0 127.0.0.1:60064] "get" "ayam"
+
+
+
+
+
+
 
 
