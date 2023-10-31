@@ -377,3 +377,57 @@ localhost:6379> config get save
 1) "save"
 2) "3600 1 300 100 60 10000"
 localhost:6379>
+
+
+
+# Client Connection
+# Redis menyimpan semua informasi client di server
+# Hal ini memudahkan kita untuk melihat daftar client, dan juga mengecek jika ada anomali, seperti terlalu banyak koneksi client ke redis
+
+# Operasi Keterangan
+# client list             Get the list of client connections
+# client id               Returns the client ID for the current connection
+# client kill ip:port     Kill the connection of a client
+
+# client list
+localhost:6379> client list
+id=3 addr=127.0.0.1:60088 laddr=127.0.0.1:6379 fd=8 name= age=353 idle=334
+id=4 addr=127.0.0.1:60090 laddr=127.0.0.1:6379 fd=9 name= age=249 idle=0
+id=5 addr=127.0.0.1:60092 laddr=127.0.0.1:6379 fd=10 name= age=10 idle=10
+
+# client id (mengecek client id berapa command ini aktif)
+localhost:6379> client id
+(integer) 4
+
+# client kill ip:port
+localhost:6379> client kill 127.0.0.1:60092
+OK
+
+
+
+# Protected Mode
+# Secara default, redis server akan mendengarkan request dari semua network interface. Ini sangat berbahaya, karena bisa jadi redis terekspos secara public
+# Namun, redis punya second layer untuk pengecekan koneksi, yaitu mode protected, secara default mode protectednya aktif, artinya walaupun redis bisa diakses dari manapun, tapi redis hanya mau menerima request dari 127.0.0.1 (localhost)
+
+# network configuration
+# rubah ip default pada file redis.conf, menjadi IPv4 Address yang di dapat dari ipconfig/ ifconfig di laptop atau di komputer
+# bind 127.0.0.1 -::1
+bind 192.168.0.102
+
+# even if no authentication is configured. (wajib)
+protected-mode yes
+
+# restart redis server dengan file redis.conf
+root@71ae6829b569:/hello# redis-server redis.conf
+
+# jalankan ulang redis clinet dengan host IPv4 Address yang sudah di set di file redis.conf
+root@71ae6829b569:/hello# redis-cli -h 192.168.0.102 -p 6379
+192.168.0.102:6379> ping
+PONG
+192.168.0.102:6379>
+
+
+
+
+
+
