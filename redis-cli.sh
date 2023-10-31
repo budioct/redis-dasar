@@ -119,3 +119,47 @@ localhost:6379> get budhi
 (nil)
 localhost:6379>
 
+
+
+# Increment & Decrement
+# Operasi Increment & Decrement sekilas sangat mudah dilakukan, hanya tinggal mengupdate data yang di redis dengan data baru (data lama ditambah 1)
+# Namun jika operasi dilakukan secara paralel dan dalam waktu yang sangat cepat, hal ini bisa memungkinkan race condition
+# Untungnya redis memiliki operasi untuk melakukan increment dan decrement
+
+# Operasi                 Keterangan
+# incr key                Increment the integer value of a key by one
+# decr key                Decrement the integer value of a key by one
+# incrby key increment    Increment the integer value of a key by the given amount
+# decrby key decrement    Decrement the integer value of a key by the given number
+
+localhost:6379> incr counter
+(integer) 1
+localhost:6379> incr counter
+(integer) 2
+localhost:6379> incr counter
+(integer) 3
+localhost:6379> get counter
+"3"
+localhost:6379> decr counter
+(integer) 2
+localhost:6379> decr counter
+(integer) 1
+localhost:6379> get counter
+"1"
+localhost:6379>
+
+localhost:6379> incrby counter 5
+(integer) 6
+localhost:6379> incrby counter 5
+(integer) 11
+localhost:6379> incrby counter 5
+(integer) 16
+localhost:6379> decrby counter 5
+(integer) 11
+localhost:6379> decrby counter 5
+(integer) 6
+localhost:6379> decrby counter 5
+(integer) 1
+localhost:6379> get counter
+"1"
+localhost:6379>
