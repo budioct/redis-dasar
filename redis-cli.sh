@@ -253,5 +253,52 @@ localhost:6379>
 
 
 
+Transaction
+# Seperti pada database relational, redis juga mendukung transaction
+# Proses transaction adalah proses dimana kita mengirimkan beberapa perintah, dan perintah tersebut akan dianggap sukses jika semua perintah sukses, jika gagal maka semua perintah harus dibatalkan
+
+# Operasi                   Keterangan
+# multi (begin)             Mark the start of a transaction block
+# exec (commit)              Execute all commands issued after MULTI
+# discard (rollback)        Discard all commands issued after MULTI
+
+# ketika di exec (commit)
+localhost:6379> multi
+OK
+localhost:6379(TX)> set android "adroid"
+QUEUED
+localhost:6379(TX)> set ios "ios"
+QUEUED
+localhost:6379(TX)> set linux "linux"
+QUEUED
+localhost:6379(TX)> exec
+1) OK
+2) OK
+3) OK
+localhost:6379> mget android ios linux
+1) "adroid"
+2) "ios"
+3) "linux"
+localhost:6379>
+
+# ketika di discard (rollback)
+localhost:6379> multi
+OK
+localhost:6379(TX)> set satu "satu"
+QUEUED
+localhost:6379(TX)> set dua "dua"
+QUEUED
+localhost:6379(TX)> set tiga "tiga"
+QUEUED
+localhost:6379(TX)> discard
+OK
+localhost:6379> mget satu dua tiga
+1) (nil)
+2) (nil)
+3) (nil)
+localhost:6379>
+
+
+
 
 
