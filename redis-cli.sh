@@ -345,8 +345,35 @@ OK
 
 
 
+# Server Information
+# butuh mendapatkan informasi dan statistik redis server
+# Seperti jumlah memory yang sudah terpakai, konfigurasi dan lain-lain
+# Redis memiliki fitur ini, sehingga kita sangat mudah untuk mendapat informasi server dan memonitor nya
 
+# Operasi               Keterangan
+# info                  Get information and statistics about the server
+# config get <key>      Get the value of a configuration parameter from redis.conf
 
+# info
+localhost:6379> info
+# Server
+redis_version:7.2.2
+# Clients
+connected_clients:3
+# Memory
+used_memory:1341072
+# Persistence
+loading:0
+# ETC
 
-
-
+# config get <key>
+localhost:6379> config get databases
+1) "databases"
+2) "16"
+localhost:6379> config get bind
+1) "bind"
+2) "* -::*"
+localhost:6379> config get save
+1) "save"
+2) "3600 1 300 100 60 10000"
+localhost:6379>
