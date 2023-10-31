@@ -47,3 +47,35 @@ localhost:6379> del budhi
 localhost:6379> get budhi
 (nil)
 localhost:6379>
+
+# Operasi Range Data String
+# Operasi                     Keterangan
+# setrange key offset value   mengubah value dari offset yang ditentukan
+# getrange key start end      mengambil value dari range yang ditentukan
+
+localhost:6379> set budhi "budhi octaviansyah"
+OK
+localhost:6379> get budhi
+"budhi octaviansyah"
+localhost:6379> setrange budhi 6 "octaviansyah 868"
+(integer) 22
+localhost:6379> get budhi
+"budhi octaviansyah 868"
+localhost:6379> getrange budhi 6 18
+"octaviansyah "
+localhost:6379>
+
+# Operasi Multiple Data String
+# Operasi                           Keterangan
+# mget key [key ...]                Get the values of all the given keys
+# mset key value [key value ...]    Set multiple keys to multiple values
+
+localhost:6379> mset budhi "100" joko "200" achmad "300" idris "400" jamal "500"
+localhost:6379> OK
+localhost:6379> mget budhi joko achmad idris jamal
+1) "100"
+2) "200"
+3) "300"
+4) "400"
+5) "500"
+localhost:6379>
