@@ -163,3 +163,52 @@ localhost:6379> decrby counter 5
 localhost:6379> get counter
 "1"
 localhost:6379>
+
+
+
+# Flush
+# Menghapus data di redis satu-satu menggunakan operasi delete bukanlah hal yang bijak
+# Redis memiliki fitur untuk menghapus seluruh data serentak di database redis, yaitu operasi flush
+
+# Operasi       Keterangan
+# flushdb       Remove all keys from the current database
+# flushall      Remove all keys from all databases
+
+localhost:6379> keys *
+1) "jamal"
+2) "counter"
+3) "achmad"
+4) "idris"
+5) "joko"
+localhost:6379> mget jamal counter achmad idris joko
+1) "500"
+2) "1"
+3) "300"
+4) "400"
+5) "200"
+localhost:6379> select 1
+OK
+localhost:6379[1]> mset budhi "budhi" oct "oct"
+OK
+localhost:6379[1]> mget budhi oct
+1) "budhi"
+2) "oct"
+localhost:6379[1]> select 0
+OK
+localhost:6379> flushdb
+OK
+localhost:6379> mget jamal counter achmad idris joko
+1) (nil)
+2) (nil)
+3) (nil)
+4) (nil)
+5) (nil)
+localhost:6379> flushall
+OK
+localhost:6379> select 1
+OK
+localhost:6379[1]> mget budhi oct
+1) (nil)
+2) (nil)
+localhost:6379[1]>
+
