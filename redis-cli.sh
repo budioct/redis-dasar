@@ -212,3 +212,46 @@ localhost:6379[1]> mget budhi oct
 2) (nil)
 localhost:6379[1]>
 
+
+
+# Pipeline
+# Perintah yang dikirim dari client ke server redis menggunakan Request/Response protocol
+# Kadang ada kebutuhan kita mengirim data ke redis dalam jumlah besar, misal ketika ada kasus memindahkan data dari database mysql ke redis
+# Jika kita mengirim satu per satu datanya, maka akan butuh waktu lama untuk selesai
+# pipeline, dimana kita bisa mengirim beberapa perintah sekaligus dalam satu request
+# perlu diketahui, server redis tidak akan membalas tiap perintah yang dikirim via pipeline
+
+pertama kita buat dulu file.. input-file.txt
+isi content
+set budhi "budhi"
+set oct "oct"
+set lfc "liverpool football club"
+set palestine "palestine"
+
+saat memulai redis-cli kita bisa merujuk file input-file.txt yang kita buat barusan dengan command di bawah
+redis-cli -h localhost -p 6379 -n 0 --pipe < input-file.txt
+
+root@71ae6829b569:/hello# nano input-file.txt
+root@71ae6829b569:/hello# ls
+dump.rdb  input-file.txt  redis.conf
+root@71ae6829b569:/hello# cat input-file.txt
+set budhi "budhi"
+set oct "oct"
+set lfc "liverpool football club"
+set palestine "palestine"
+root@71ae6829b569:/hello# redis-cli -h localhost -p 6379 -n 0 --pipe < input-file.txt
+All data transferred. Waiting for the last reply...
+Last reply received from server.
+errors: 0, replies: 4
+root@71ae6829b569:/hello# redis-cli -h localhost -p 6379
+localhost:6379> mget budhi oct lfc palestine
+1) "budhi"
+2) "oct"
+3) "liverpool football club"
+4) "palestine"
+localhost:6379>
+
+
+
+
+
