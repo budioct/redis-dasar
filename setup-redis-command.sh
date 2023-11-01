@@ -63,6 +63,9 @@ EXPOSE 6379
 # cmd instruksi
 docker build -t redis-alphine . # akan membaca Docker file dalama directory
 
+docker container create --name redis-stack -p 6379:6379 -p 8001:8001 redis-alphine # hanya dibuatkan
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis-alphine # dibuatkan sekaligus di jalanakan
+
 
 
 # docker compose config .yml
@@ -90,6 +93,29 @@ volumes:
 
 # cmd instruksi
 docker-compose -f redis-docker-compose.yml up
+
+# docker compose config .yml versi 2
+version: "3.8"
+
+services:
+  redis-stack:
+    container_name: "redis-stack"
+    image: redis:alpine
+    command : redis-server /usr/local/etc/redis/redis.conf --requirepass rahasia
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+
+# cmd instruksi
+docker-compose -f redis-docker-compose.yml up
+docker exec -it redis-stack sh
+/data # redis-cli
+127.0.0.1:6379> auth rahasia
+OK
+127.0.0.1:6379> ping
+PONG
+
 
 
 ########################################################################
